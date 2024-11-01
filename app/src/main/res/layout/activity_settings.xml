@@ -1,0 +1,47 @@
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:orientation="vertical"
+    android:padding="16dp">
+
+    <TextView
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="Настройки"
+        android:textSize="24sp"
+        android:textStyle="bold"
+        android:layout_gravity="center" />
+
+    <Switch
+        android:id="@+id/notifications_switch"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:text="Уведомления о погоде"
+        android:layout_marginTop="16dp" />
+
+    <RadioGroup
+        android:id="@+id/temperature_unit_group"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="16dp">
+
+        <RadioButton
+            android:id="@+id/celsius_radio"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="°C" />
+
+        <RadioButton
+            android:id="@+id/fahrenheit_radio"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="°F" />
+    </RadioGroup>
+
+    <Switch
+        android:id="@+id/theme_switch"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:text="Темная тема"
+        android:layout_marginTop="16dp" />
+</LinearLayout>

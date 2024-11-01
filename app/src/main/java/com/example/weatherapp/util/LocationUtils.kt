@@ -1,14 +1,24 @@
 package com.example.weatherapp.util
 
+import android.annotation.SuppressLint
 import android.content.Context
-import android.location.Geocoder
 import android.location.Location
-import java.util.Locale
+import android.util.Log
+import com.google.android.gms.location.FusedLocationProviderClient
+import com.google.android.gms.location.LocationServices
+import com.google.android.gms.tasks.Task
 
 object LocationUtils {
-    fun getCityName(context: Context, location: Location): String {
-        val geocoder = Geocoder(context, Locale.getDefault())
-        val addresses = geocoder.getFromLocation(location.latitude, location.longitude, 1)
-        return addresses?.firstOrNull()?.locality ?: "Unknown"
+    @SuppressLint("MissingPermission")
+    fun getLastKnownLocation(context: Context, callback: (Location?) -> Unit) {
+        val fusedLocationClient: FusedLocationProviderClient = LocationServices.getFusedLocationProviderClient(context)
+        fusedLocationClient.lastLocation
+            .addOnSuccessListener { location: Location? ->
+                callback(location)
+            }
+            .addOnFailureListener { e ->
+                Log.e("LocationUtils", "Error getting location: ", e)
+                callback(null)
+            }
     }
 }

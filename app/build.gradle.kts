@@ -50,6 +50,9 @@ dependencies {
 
     implementation(libs.androidx.room.runtime)
     kapt(libs.androidx.room.compiler)
+    implementation(libs.androidx.recyclerview )// or latest version
+    implementation(libs.androidx.lifecycle.livedata.ktx.v231 )// or latest version
+    implementation(libs.androidx.lifecycle.viewmodel.ktx.v231) // or latest version
 
     implementation(libs.androidx.core.ktx)
     implementation(libs.androidx.appcompat)

@@ -1,11 +1,18 @@
 package com.example.weatherapp.model
 
 data class WeatherResponse(
-    val main: Main,
+    val coord: Coord,
     val weather: List<Weather>,
+    val main: Main,
     val wind: Wind,
     val sys: Sys
 )
+
+data class Coord(
+    val lat: Double,
+    val lon: Double
+)
+
 
 data class Main(
     val temp: Double,
@@ -13,14 +20,8 @@ data class Main(
     val humidity: Int
 )
 
-data class Weather(
-    val main: String,
-    val description: String
-)
-
 data class Wind(
-    val speed: Double,
-    val deg: Int
+    val speed: Double
 )
 
 data class Sys(
