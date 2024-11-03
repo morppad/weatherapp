@@ -49,11 +49,13 @@ dependencies {
     implementation(libs.material.v190)
 
     implementation(libs.androidx.room.runtime)
+    implementation(libs.play.services.contextmanager)
     kapt(libs.androidx.room.compiler)
     implementation(libs.androidx.recyclerview )// or latest version
     implementation(libs.androidx.lifecycle.livedata.ktx.v231 )// or latest version
     implementation(libs.androidx.lifecycle.viewmodel.ktx.v231) // or latest version
 
+    implementation ("androidx.recyclerview:recyclerview:1.2.1")
     implementation(libs.androidx.core.ktx)
     implementation(libs.androidx.appcompat)
     implementation(libs.material)

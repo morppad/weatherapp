@@ -5,16 +5,12 @@ import androidx.lifecycle.LiveData
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.liveData
 import com.example.weatherapp.api.WeatherApi
-import com.example.weatherapp.model.DailyForecast
-import com.example.weatherapp.model.HourlyForecast
-import com.example.weatherapp.model.WeatherResponse
-import com.example.weatherapp.model.WeeklyForecastResponse
+import com.example.weatherapp.model.*
+import com.example.weatherapp.util.Constants
+import com.example.weatherapp.R
 import kotlinx.coroutines.Dispatchers
 import java.text.SimpleDateFormat
-import java.util.Date
-import java.util.Locale
-import com.example.weatherapp.R
-import com.example.weatherapp.util.Constants
+import java.util.*
 
 class WeatherViewModel(private val weatherApi: WeatherApi) : ViewModel() {
 
@@ -33,46 +29,45 @@ class WeatherViewModel(private val weatherApi: WeatherApi) : ViewModel() {
     fun getHourlyForecast(lat: Double, lon: Double): LiveData<List<HourlyForecast>> = liveData(Dispatchers.IO) {
         try {
             val response = weatherApi.getHourlyForecast(lat, lon, apiKey = Constants.API_KEY)
-            val hourlyForecastList = response.hourly.map { hourlyData ->
+
+            // Now you can safely access `response.list`
+            val hourlyForecastList = response.list.map { hourlyData ->
                 HourlyForecast(
                     hour = formatTime(hourlyData.dt),
-                    temp = hourlyData.temp,
+                    temp = hourlyData.main.temp,
                     weatherIcon = getWeatherIcon(hourlyData.weather.firstOrNull()?.main ?: "Clear")
                 )
             }
+
             emit(hourlyForecastList)
         } catch (e: Exception) {
-            emit(emptyList()) // Return empty list on error
+            Log.e("WeatherApp", "Error fetching hourly forecast: ${e.message}", e)
+            emit(emptyList())
         }
     }
 
-
-    fun getWeeklyForecast(lat: Double, lon: Double): LiveData<List<DailyForecast>> = liveData(Dispatchers.IO) {
+    fun getDailyForecast(lat: Double, lon: Double): LiveData<List<DailyForecast>> = liveData(Dispatchers.IO) {
         try {
             val response = weatherApi.getWeeklyForecast(lat, lon, apiKey = Constants.API_KEY)
-            val dailyForecastList = response.daily.map { dailyData ->
+            val dailyForecastList = response.list.map { dailyData ->
                 DailyForecast(
-                    day = formatTime(dailyData.dt),
-                    tempMin = dailyData.temp.min,
-                    tempMax = dailyData.temp.max,
-                    weatherIcon = getWeatherIcon(dailyData.weather.firstOrNull()?.main ?: "Clear")
+                    date = dailyData.dt,
+                    tempMin = dailyData.main.temp_min,
+                    tempMax = dailyData.main.temp_max,
+                    weatherDescription = dailyData.weather.firstOrNull()?.description ?: "Clear",
+                    weatherIcon = dailyData.weather.firstOrNull()?.icon ?: "01d"
                 )
             }
             emit(dailyForecastList)
         } catch (e: Exception) {
-            emit(emptyList()) // Return empty list on error
+            Log.e("WeatherApp", "Error fetching daily forecast: ${e.message}", e)
+            emit(emptyList())
         }
     }
 
     private fun formatTime(unixTime: Long): String {
         val date = Date(unixTime * 1000)
-        val sdf = SimpleDateFormat("EEEE", Locale.getDefault())
-        return sdf.format(date)
-    }
-
-    private fun formatDay(unixTime: Long): String {
-        val date = Date(unixTime * 1000)
-        val sdf = SimpleDateFormat("EEE", Locale.getDefault())
+        val sdf = SimpleDateFormat("HH:mm", Locale.getDefault())
         return sdf.format(date)
     }
 

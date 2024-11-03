@@ -9,21 +9,19 @@ import java.util.concurrent.TimeUnit
 
 object WeatherRepository {
 
-    private val client = OkHttpClient.Builder()
-        .connectTimeout(100, TimeUnit.SECONDS)  // Increase connection timeout
-        .readTimeout(100, TimeUnit.SECONDS)     // Increase read timeout
-        .writeTimeout(100, TimeUnit.SECONDS)    // Increase write timeout
+    val client = OkHttpClient.Builder()
+        .connectTimeout(100, TimeUnit.SECONDS) // increase connection timeout
+        .readTimeout(100, TimeUnit.SECONDS)    // increase read timeout
+        .writeTimeout(100, TimeUnit.SECONDS)   // increase write timeout
         .build()
 
-
-
-    private val retrofit = Retrofit.Builder()
-        .baseUrl(Constants.BASE_URL)
-        .client(client)
+    val retrofit = Retrofit.Builder()
+        .baseUrl("https://api.openweathermap.org/data/2.5/")
         .addConverterFactory(GsonConverterFactory.create())
         .build()
 
     val api: WeatherApi = retrofit.create(WeatherApi::class.java)
+
 
 
 
