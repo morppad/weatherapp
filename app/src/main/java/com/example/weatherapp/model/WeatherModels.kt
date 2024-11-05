@@ -1,6 +1,7 @@
 package com.example.weatherapp.model
 
 import com.example.weatherapp.R
+import com.google.gson.annotations.SerializedName
 import java.text.SimpleDateFormat
 import java.util.Date
 import java.util.Locale
@@ -14,19 +15,11 @@ data class WeatherResponse(
     val sys: Sys
 )
 
-// Response for hourly forecast data
 data class HourlyForecastResponse(
     val list: List<HourlyData>,
     val city: City
 )
 
-// Response for weekly forecast data
-data class WeeklyForecastResponse(
-    val list: List<DailyData>,
-    val city: City
-)
-
-// Model for individual hourly forecast data
 data class HourlyData(
     val dt: Long,
     val main: Main,
@@ -35,7 +28,15 @@ data class HourlyData(
     val wind: Wind,
     val visibility: Int,
     val pop: Double,
-    val rain: Rain?
+    val rain: Rain?,
+    val sys: Sys,
+    val dt_txt: String
+)
+
+// Response for weekly forecast data
+data class WeeklyForecastResponse(
+    val list: List<DailyData>,
+    val city: City
 )
 
 // Model for individual daily forecast data
@@ -52,7 +53,10 @@ data class Main(
     val temp_min: Double,
     val temp_max: Double,
     val pressure: Int,
-    val humidity: Int
+    val sea_level: Int,
+    val grnd_level: Int,
+    val humidity: Int,
+    val temp_kf: Double
 )
 
 data class Weather(

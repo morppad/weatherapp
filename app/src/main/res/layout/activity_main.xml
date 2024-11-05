@@ -152,18 +152,4 @@
         android:layout_height="wrap_content"
         android:orientation="horizontal"
         android:layout_marginBottom="16dp" />
-
-    <!-- Daily forecast section -->
-    <TextView
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:text="Daily Forecast"
-        android:textStyle="bold"
-        android:textColor="@color/primary_text_color"
-        android:layout_marginBottom="8dp" />
-
-    <androidx.recyclerview.widget.RecyclerView
-        android:id="@+id/weekly_forecast_recycler"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content" />
 </LinearLayout>

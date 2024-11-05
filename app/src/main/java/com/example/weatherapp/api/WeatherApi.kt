@@ -15,7 +15,7 @@ interface WeatherApi {
         @Query("units") units: String = "metric"
     ): WeatherResponse
 
-    @GET("forecast/hourly")
+    @GET("forecast")
     suspend fun getHourlyForecast(
         @Query("lat") lat: Double,
         @Query("lon") lon: Double,

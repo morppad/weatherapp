@@ -2,13 +2,16 @@ package com.example.weatherapp.ui
 
 import android.util.Log
 import androidx.lifecycle.LiveData
+import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.liveData
+import androidx.lifecycle.viewModelScope
 import com.example.weatherapp.api.WeatherApi
 import com.example.weatherapp.model.*
 import com.example.weatherapp.util.Constants
 import com.example.weatherapp.R
 import kotlinx.coroutines.Dispatchers
+import kotlinx.coroutines.launch
 import java.text.SimpleDateFormat
 import java.util.*
 
@@ -26,11 +29,34 @@ class WeatherViewModel(private val weatherApi: WeatherApi) : ViewModel() {
         }
     }
 
+    private val _hourlyForecast = MutableLiveData<List<HourlyForecast>>()
+    val hourlyForecast: LiveData<List<HourlyForecast>> get() = _hourlyForecast
+
+//    fun getHourlyForecast(lat: Double, lon: Double) {
+//        viewModelScope.launch(Dispatchers.IO) {
+//            try {
+//                val response = weatherApi.getHourlyForecast(lat, lon, apiKey = Constants.API_KEY)
+//
+//                val hourlyForecastList = response.list.map { hourlyData ->
+//                    HourlyForecast(
+//                        hour = formatTime(hourlyData.dt),
+//                        temp = hourlyData.main.temp,
+//                        weatherIcon = getWeatherIcon(hourlyData.weather.firstOrNull()?.main ?: "Clear")
+//                    )
+//                }
+//
+//                // Обновляем данные в _hourlyForecast
+//                _hourlyForecast.postValue(hourlyForecastList)
+//            } catch (e: Exception) {
+//                Log.e("WeatherApp", "Error fetching hourly forecast: ${e.message}", e)
+//                _hourlyForecast.postValue(emptyList())
+//            }
+//        }
+//    }
+    // В WeatherViewModel
     fun getHourlyForecast(lat: Double, lon: Double): LiveData<List<HourlyForecast>> = liveData(Dispatchers.IO) {
         try {
             val response = weatherApi.getHourlyForecast(lat, lon, apiKey = Constants.API_KEY)
-
-            // Now you can safely access `response.list`
             val hourlyForecastList = response.list.map { hourlyData ->
                 HourlyForecast(
                     hour = formatTime(hourlyData.dt),
@@ -38,13 +64,13 @@ class WeatherViewModel(private val weatherApi: WeatherApi) : ViewModel() {
                     weatherIcon = getWeatherIcon(hourlyData.weather.firstOrNull()?.main ?: "Clear")
                 )
             }
-
             emit(hourlyForecastList)
         } catch (e: Exception) {
             Log.e("WeatherApp", "Error fetching hourly forecast: ${e.message}", e)
             emit(emptyList())
         }
     }
+
 
     fun getDailyForecast(lat: Double, lon: Double): LiveData<List<DailyForecast>> = liveData(Dispatchers.IO) {
         try {
