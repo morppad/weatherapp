@@ -1,19 +1,17 @@
 package com.example.weatherapp.ui
 
 import android.os.Bundle
+import android.view.View
 import android.widget.Button
 import android.widget.EditText
+import android.widget.LinearLayout
 import android.widget.TextView
 import android.widget.Toast
 import androidx.appcompat.app.AppCompatActivity
 import androidx.lifecycle.Observer
 import androidx.lifecycle.ViewModelProvider
-import androidx.recyclerview.widget.LinearLayoutManager
-import androidx.recyclerview.widget.RecyclerView
 import com.example.weatherapp.R
 import com.example.weatherapp.api.WeatherApi
-import com.example.weatherapp.ui.adapter.HourlyForecastAdapter
-import com.example.weatherapp.ui.adapter.WeeklyForecastAdapter
 import com.example.weatherapp.util.Constants
 import com.example.weatherapp.util.NetworkUtils
 import retrofit2.Retrofit
@@ -30,26 +28,27 @@ class MainActivity : AppCompatActivity() {
     private lateinit var sunriseSunsetText: TextView
     private lateinit var cityInput: EditText
     private lateinit var searchButton: Button
-
-    private lateinit var hourlyForecastRecycler: RecyclerView
-    private lateinit var weeklyForecastRecycler: RecyclerView
-    private lateinit var hourlyAdapter: HourlyForecastAdapter
-    private lateinit var weeklyAdapter: WeeklyForecastAdapter
+    private lateinit var searchLayout: LinearLayout
+    private lateinit var cityInfoLayout: LinearLayout
+    private lateinit var cityNameText: TextView
+    private lateinit var changeCityButton: Button
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_main)
 
+        // Initialize Retrofit and WeatherApi
         val retrofit = Retrofit.Builder()
             .baseUrl(Constants.BASE_URL)
             .addConverterFactory(GsonConverterFactory.create())
             .build()
         val weatherApi = retrofit.create(WeatherApi::class.java)
 
+        // Initialize ViewModel
         val factory = WeatherViewModelFactory(weatherApi)
         weatherViewModel = ViewModelProvider(this, factory)[WeatherViewModel::class.java]
 
-        // Initialize UI elements
+        // Initialize UI components
         temperatureText = findViewById(R.id.temperature_text)
         descriptionText = findViewById(R.id.description_text)
         feelsLikeText = findViewById(R.id.feels_like_text)
@@ -58,36 +57,35 @@ class MainActivity : AppCompatActivity() {
         sunriseSunsetText = findViewById(R.id.sunrise_sunset_text)
         cityInput = findViewById(R.id.city_input)
         searchButton = findViewById(R.id.search_button)
+        searchLayout = findViewById(R.id.search_layout)
+        cityInfoLayout = findViewById(R.id.city_info_layout)
+        cityNameText = findViewById(R.id.city_name_text)
+        changeCityButton = findViewById(R.id.change_city_button)
 
-        // Initialize RecyclerViews and adapters for forecasts
-        hourlyForecastRecycler = findViewById(R.id.hourly_forecast_recycler)
-        weeklyForecastRecycler = findViewById(R.id.weekly_forecast_recycler)
-
-        hourlyAdapter = HourlyForecastAdapter()
-        weeklyAdapter = WeeklyForecastAdapter()
-
-        hourlyForecastRecycler.layoutManager = LinearLayoutManager(this, LinearLayoutManager.HORIZONTAL, false)
-        weeklyForecastRecycler.layoutManager = LinearLayoutManager(this)
-
-        hourlyForecastRecycler.adapter = hourlyAdapter
-        weeklyForecastRecycler.adapter = weeklyAdapter
-
-        // Load default city weather
+        // Load initial weather data
         if (NetworkUtils.isNetworkAvailable(this)) {
             getWeatherData("Moscow")
-            getHourlyForecast(55.7522, 37.6156) // Use Moscow's coordinates as default
-            getWeeklyForecast(55.7522, 37.6156) // Use Moscow's coordinates as default
         } else {
             Toast.makeText(this, "No internet connection", Toast.LENGTH_SHORT).show()
         }
 
+        // Search button functionality
         searchButton.setOnClickListener {
             val city = cityInput.text.toString()
             if (city.isNotEmpty()) {
                 getWeatherData(city)
+                searchLayout.visibility = View.GONE
+                cityInfoLayout.visibility = View.VISIBLE
+                cityNameText.text = city
             } else {
                 Toast.makeText(this, "Please enter a city name", Toast.LENGTH_SHORT).show()
             }
+        }
+
+        // Change city button functionality
+        changeCityButton.setOnClickListener {
+            searchLayout.visibility = View.VISIBLE
+            cityInfoLayout.visibility = View.GONE
         }
     }
 
@@ -100,25 +98,9 @@ class MainActivity : AppCompatActivity() {
                 humidityText.text = "Humidity: ${weather.main.humidity}%"
                 windSpeedText.text = "Wind speed: ${weather.wind.speed} m/s"
                 sunriseSunsetText.text = "Sunrise: ${formatTime(weather.sys.sunrise)} Sunset: ${formatTime(weather.sys.sunset)}"
-
-                // Fetch hourly and weekly forecasts using city coordinates
-                getHourlyForecast(weather.coord.lat, weather.coord.lon)
-                getWeeklyForecast(weather.coord.lat, weather.coord.lon)
             } else {
                 Toast.makeText(this, "Failed to load weather data", Toast.LENGTH_SHORT).show()
             }
-        })
-    }
-
-    private fun getHourlyForecast(lat: Double, lon: Double) {
-        weatherViewModel.getHourlyForecast(lat, lon).observe(this, Observer { hourlyData ->
-            hourlyAdapter.submitList(hourlyData)
-        })
-    }
-
-    private fun getWeeklyForecast(lat: Double, lon: Double) {
-        weatherViewModel.getDailyForecast(lat, lon).observe(this, Observer { dailyData ->
-            weeklyAdapter.submitList(dailyData)
         })
     }
 

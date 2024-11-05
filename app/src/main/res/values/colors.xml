@@ -1,10 +1,39 @@
 <?xml version="1.0" encoding="utf-8"?>
+<!-- res/values/colors.xml -->
 <resources>
-    <color name="purple_200">#FFBB86FC</color>
-    <color name="purple_500">#FF6200EE</color>
-    <color name="purple_700">#FF3700B3</color>
-    <color name="teal_200">#FF03DAC5</color>
-    <color name="teal_700">#FF018786</color>
-    <color name="black">#FF000000</color>
-    <color name="white">#FFFFFFFF</color>
+    <!-- Primary and Accent Colors for the App Theme -->
+    <color name="colorPrimary">#1E88E5</color> <!-- Blue for primary color (e.g., action bar) -->
+    <color name="colorPrimaryDark">#1565C0</color> <!-- Darker blue for status bar -->
+    <color name="colorAccent">#29B6F6</color> <!-- Light blue for accent color (e.g., buttons) -->
+
+    <!-- Background and Text Colors -->
+    <color name="background_color">#E3F2FD</color> <!-- Light blue background color -->
+    <color name="primary_text_color">#0D47A1</color> <!-- Navy blue for primary text -->
+    <color name="secondary_text_color">#424242</color> <!-- Dark gray for secondary text -->
+    <color name="background_edit_text">#FFFFFF</color> <!-- Background color for EditText -->
+    <color name="border_edit_text">#CCCCCC</color> <!-- Border color for EditText -->
+
+
+    <!-- Weather-specific Highlight Colors -->
+    <color name="temperature_text_color">#FF7043</color> <!-- Warm orange for temperature -->
+    <color name="humidity_color">#26C6DA</color> <!-- Teal for humidity text -->
+    <color name="wind_speed_color">#8E24AA</color> <!-- Purple for wind speed -->
+
+    <!-- Button Colors -->
+    <color name="button_color">#039BE5</color> <!-- Bright blue for buttons -->
+    <color name="button_text_color">#FFFFFF</color> <!-- White text on buttons -->
+
+    <!-- Miscellaneous Colors -->
+    <color name="sunrise_sunset_color">#FFD54F</color> <!-- Yellow for sunrise/sunset text -->
+    <color name="divider_color">#BDBDBD</color> <!-- Light gray for dividers -->
+
+    <!-- Default Colors (Template) -->
+    <color name="purple_200">#BB86FC</color>
+    <color name="purple_500">#6200EE</color>
+    <color name="purple_700">#3700B3</color>
+    <color name="teal_200">#03DAC5</color>
+    <color name="teal_700">#018786</color>
+    <color name="black">#000000</color>
+    <color name="white">#FFFFFF</color>
+
 </resources>

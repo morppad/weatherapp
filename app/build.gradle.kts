@@ -50,7 +50,9 @@ dependencies {
 
     implementation(libs.androidx.room.runtime)
     implementation(libs.play.services.contextmanager)
-    kapt(libs.androidx.room.compiler)
+    //kapt(libs.androidx.room.compiler)
+    annotationProcessor("androidx.room:room-compiler:2.4.1")
+    annotationProcessor("com.google.dagger:dagger-compiler:2.x")
     implementation(libs.androidx.recyclerview )// or latest version
     implementation(libs.androidx.lifecycle.livedata.ktx.v231 )// or latest version
     implementation(libs.androidx.lifecycle.viewmodel.ktx.v231) // or latest version
