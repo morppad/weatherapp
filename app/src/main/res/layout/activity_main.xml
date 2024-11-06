@@ -66,6 +66,16 @@
     </LinearLayout>
 
     <!-- Display current temperature -->
+    <Button
+        android:id="@+id/switch_temp_unit_button"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="°C/°F"
+        android:backgroundTint="@color/button_color"
+        android:textColor="@color/button_text_color"
+        android:layout_gravity="center_horizontal"
+        android:layout_marginTop="8dp" />
+
     <TextView
         android:id="@+id/temperature_text"
         android:layout_width="wrap_content"

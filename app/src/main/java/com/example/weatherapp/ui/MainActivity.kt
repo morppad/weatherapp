@@ -43,6 +43,10 @@ class MainActivity : AppCompatActivity() {
     private lateinit var changeCityButton: Button
     private lateinit var hourlyForecastAdapter: HourlyForecastAdapter
     private lateinit var hourlyForecastRecyclerView: RecyclerView
+    private lateinit var switchTempUnitButton: Button
+    private var isCelsius = true
+    private var baseTemperatureCelsius: Double? = null
+    private var isFahrenheit = false
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -82,6 +86,7 @@ class MainActivity : AppCompatActivity() {
         cityInfoLayout = findViewById(R.id.city_info_layout)
         cityNameText = findViewById(R.id.city_name_text)
         changeCityButton = findViewById(R.id.change_city_button)
+        switchTempUnitButton = findViewById(R.id.switch_temp_unit_button)  // Кнопка переключения температуры
 
         // Инициализация RecyclerView для почасового прогноза
         hourlyForecastRecyclerView = findViewById(R.id.hourly_forecast_recycler)
@@ -117,7 +122,34 @@ class MainActivity : AppCompatActivity() {
         changeCityButton.setOnClickListener {
             toggleSearchLayout(true)
         }
+
+        switchTempUnitButton.setOnClickListener {
+            isFahrenheit = !isFahrenheit
+            updateTemperatureDisplay()
+        }
     }
+    private fun convertToFahrenheit(celsius: Double): Double {
+        return celsius * 9 / 5 + 32
+    }
+    private fun updateTemperatureDisplay() {
+        baseTemperatureCelsius?.let { baseTemp ->
+            val displayTemp = if (isFahrenheit) {
+                // Convert Celsius to Fahrenheit
+                baseTemp * 9 / 5 + 32
+            } else {
+                // Display in Celsius
+                baseTemp
+            }
+
+            temperatureText.text = String.format("%.1f°%s", displayTemp, if (isFahrenheit) "F" else "C")
+        }
+    }
+
+    private fun formatTemperature(temp: Double): String {
+        val convertedTemp = if (isCelsius) temp else convertToFahrenheit(temp)
+        return String.format("%.1f°%s", convertedTemp, if (isCelsius) "C" else "F")
+    }
+
 
     private fun toggleSearchLayout(showSearch: Boolean) {
         searchLayout.visibility = if (showSearch) View.VISIBLE else View.GONE
@@ -185,6 +217,7 @@ class MainActivity : AppCompatActivity() {
 //        })
 
     private fun updateWeatherUI(weather: WeatherResponse) {
+        baseTemperatureCelsius = weather.main.temp
         temperatureText.text = "${weather.main.temp}°C"
         descriptionText.text = weather.weather.firstOrNull()?.description ?: "Unknown"
         feelsLikeText.text = "Feels like ${weather.main.feels_like}°C"
@@ -192,6 +225,7 @@ class MainActivity : AppCompatActivity() {
         windSpeedText.text = "Wind speed: ${weather.wind.speed} m/s"
         sunriseSunsetText.text = "Sunrise: ${formatTime(weather.sys.sunrise)} Sunset: ${formatTime(weather.sys.sunset)}"
     }
+
 
     private fun formatTime(unixTime: Long): String {
         val date = java.util.Date(unixTime * 1000)
